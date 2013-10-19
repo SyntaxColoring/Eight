@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<meta>
+		<style>
+			body
+			{
+				background-color: white;
+			}
+			
+			#button
+			{
+				cursor: pointer;
+				display: block;
+				margin: 0 auto;
+				padding: 0;
+				border: none;
+				outline: none;
+				font-size: 8em;
+				width: 2em;
+				height: 2em;
+				color: #dd0000;
+				background-color: white;
+				border-radius: 1em;
+				border: 0.125em solid #222;
+			}
+
+			#button.pressed
+			{
+				box-shadow: inset 0 0 0.25em black;
+				color: #da0000;
+				background-color: #fdfdfd;
+			}
+		</style>
+		<script>
+			window.onload = function() {
+				var DURATION = 0.47;
+				
+				var sound = new Audio("Eight.mp3");
+				var button = document.getElementById("button");
+				
+				var pressed = false;
+
+				var mouseReleased = false;
+				var timedOut = false;
+				
+				function attemptRelease() {
+					console.log(mouseReleased + ", " + timedOut);
+					if (mouseReleased && timedOut) { 
+						pressed = false;
+						console.log("Release.");
+						button.className = "";
+						mouseReleased = false;
+						timedOut = false;
+					}
+				}
+				
+				button.onmousedown = function() {
+					if (!pressed) {
+						pressed = true;
+						window.setTimeout(function() {
+							timedOut = true;
+							attemptRelease();
+						}, DURATION*1000);
+						sound.play();
+						button.className = "pressed";
+					}
+					else console.log("Overflow.");
+				}
+				
+				button.onmouseup = function() {
+					mouseReleased = true;
+					attemptRelease();
+				}
+			}
+		</script>
+	</meta>
+	<body>
+		<button id = "button">8</button>
+	</body>
+</html>
