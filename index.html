@@ -1,27 +1,60 @@
 <!DOCTYPE html>
 <html>
-	<meta>
+	<head>
+		<meta charset = "utf-8">
+		<title>Eight</title>
 		<style>
-			body
+			html
 			{
-				background-color: white;
+				margin: 0;
 			}
 			
-			#button
+			body
 			{
-				cursor: pointer;
+				width: 20em;
+				margin: 0 auto;
+				font-size: 200%;
+			}
+
+			#eights
+			{
+				display: table;
+				width: 100%;
+				margin: 1em 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.eight
+			{
+				display: table-cell;
+				margin: 0;
+				padding: 0;
+				text-align: center;
+				font-family: "Arial Black", "Arial Bold", Gadget, sans-serif;
+				visibility: hidden;
+			}
+
+			.eight.visible { visibility: visible; }
+			
+			#button, #button:hover, #button:focus, #button:active
+			{
 				display: block;
+				height: 2em;
+				width: 2em;
 				margin: 0 auto;
 				padding: 0;
-				border: none;
-				outline: none;
-				font-size: 8em;
-				width: 2em;
-				height: 2em;
-				color: #dd0000;
-				background-color: white;
-				border-radius: 1em;
 				border: 0.125em solid #222;
+				border-radius: 1em;
+				
+				outline: none;
+				cursor: pointer;
+
+				font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+				font-size: 4em;
+				color: #dd0000;
+
+				background-color: white;
 			}
 
 			#button.pressed
@@ -40,29 +73,36 @@
 				
 				var pressed = false;
 
-				var mouseReleased = false;
-				var timedOut = false;
+				var mouseReleased = true;
+				var timedOut = true;
+				
+				function setEffects(visible) {
+					var eights = document.getElementsByClassName("eight");
+					for (var index = 0; index < eights.length; index++) {
+						console.log(eights[index]);
+						eights[index].className = (visible ? "eight visible" : "eight");
+					}
+					button.className = (visible ? "pressed" : "");
+				}
 				
 				function attemptRelease() {
-					console.log(mouseReleased + ", " + timedOut);
 					if (mouseReleased && timedOut) { 
 						pressed = false;
-						console.log("Release.");
-						button.className = "";
-						mouseReleased = false;
-						timedOut = false;
+						setEffects(false);
 					}
 				}
 				
 				button.onmousedown = function() {
 					if (!pressed) {
 						pressed = true;
+						mouseReleased = false;
+						timedOut = false;
 						window.setTimeout(function() {
 							timedOut = true;
 							attemptRelease();
 						}, DURATION*1000);
 						sound.play();
-						button.className = "pressed";
+						setEffects(true);
 					}
 					else console.log("Overflow.");
 				}
@@ -71,10 +111,19 @@
 					mouseReleased = true;
 					attemptRelease();
 				}
+				
+				button.onmouseout = button.onmouseup;
 			}
 		</script>
-	</meta>
+	</head>
 	<body>
+		<ul id = "eights">
+			<li class = "eight">8</li>
+			<li class = "eight">8</li>
+			<li class = "eight">8</li>
+			<li class = "eight">8</li>
+			<li class = "eight">8</li>
+		</ul>
 		<button id = "button">8</button>
 	</body>
 </html>
